@@ -3,4 +3,5 @@
 
 ## Start 
  - npm install / yarn install
+ - copy .env.example become .env fill all credential value
  - npm run dev / yarn dev
