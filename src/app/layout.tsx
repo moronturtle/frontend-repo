@@ -1,4 +1,6 @@
-import { ReduxProvider } from './providers';
+import { ReduxProvider } from '@/store/providers';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '@/theme/theme';
 
 export default function RootLayout({
   children,
@@ -8,7 +10,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ReduxProvider>{children}</ReduxProvider>
+        <ThemeProvider theme={theme}>
+          <ReduxProvider>{children}</ReduxProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
