@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TextField, Button, Container, Typography } from '@mui/material';
-import { loginUser } from '@/apis/authApi';
+import { loginUser, loginWithGoogle } from '@/apis/authApi';
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>('');
@@ -12,6 +12,17 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       const token = await loginUser(email, password);
+      if (token) {
+        router.push('/main');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const token = await loginWithGoogle();
       if (token) {
         router.push('/main');
       }
@@ -40,6 +51,9 @@ export default function LoginPage() {
       />
       <Button variant="contained" onClick={handleLogin}>
         Login
+      </Button>
+      <Button variant="contained" color="primary" onClick={handleGoogleLogin}>
+        Login dengan Google
       </Button>
     </Container>
   );
