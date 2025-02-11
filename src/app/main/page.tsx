@@ -2,8 +2,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../apis/userApi';
 import { setUserInfo, setLoading, setError } from '@/store/slices/userSlice';
-import { Button, Typography, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { RootState, AppDispatch } from '../../store/store';
+import UserList from '@/components/organism/UserList';
+import Typography from '@/components/atoms/Typography';
 
 export default function MainPage() {
   const dispatch: AppDispatch = useDispatch();
@@ -23,15 +25,16 @@ export default function MainPage() {
 
   return (
     <Container>
-      <Button variant="contained" onClick={handleFetchUser} disabled={loading}>
+      {/* <Button variant="contained" onClick={handleFetchUser} disabled={loading}>
         {loading ? 'Loading...' : 'Fetch User Info'}
-      </Button>
-      {userInfo && (
-        <Typography variant="body1">
-          User: {JSON.stringify(userInfo)}
-        </Typography>
-      )}
+      </Button> */}
+      {userInfo && <Typography variant="body1">User: {JSON.stringify(userInfo)}</Typography>}
       {error && <Typography color="error">{error}</Typography>}
+
+      <Typography variant="h5" gutterBottom sx={{ mt: 6 }}>
+        User Management
+      </Typography>
+      <UserList />
     </Container>
   );
 }
