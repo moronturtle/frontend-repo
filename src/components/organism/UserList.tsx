@@ -14,6 +14,7 @@ const DUMMY_USER = [
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [notification, setNotification] = useState(false);
 
@@ -22,9 +23,19 @@ const UserList = () => {
   //                         { id: "1", name: "test", email: "test@gmail.com", age: "45" }]));
   //   };
 
+//   const handleLoadUsers = () => {
+//     setUsers(DUMMY_USER as any);
+//   };
+
   const handleLoadUsers = () => {
-    setUsers(DUMMY_USER as any);
+    setLoading(true);
+
+    setTimeout(() => {
+      setUsers(DUMMY_USER as any);
+      setLoading(false);
+    }, 2000);
   };
+
 
   const handleEdit = (user: any) => {
     setSelectedUser(user);
@@ -42,7 +53,7 @@ const UserList = () => {
       <div style={{ display: 'flex',marginBottom: '20px', width:'200px' }}>
         <Button  onClick={handleLoadUsers}>Fetch User Info</Button>
       </div>
-      <UserTable users={users} onEdit={handleEdit} />
+      <UserTable loading={loading} users={users} onEdit={handleEdit} />
       <EditUserModal
         open={openModal}
         user={selectedUser}

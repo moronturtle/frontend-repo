@@ -1,14 +1,14 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Box } from "@mui/material";
 import TableHeadCell from "@/components/atoms/TableHeadCell";
 import Button from "@/components/atoms/Button";
 
-
 interface UserTableProps {
+  loading: boolean;
   users: { id: string; name: string; email: string; age: string }[];
   onEdit: (user: any) => void;
 }
 
-const UserTable = ({ users, onEdit }: UserTableProps) => (
+const UserTable = ({ loading, users, onEdit }: UserTableProps) => (
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
@@ -21,17 +21,27 @@ const UserTable = ({ users, onEdit }: UserTableProps) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {users.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>{user.id}</TableCell>
-            <TableCell>{user.name}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.age}</TableCell>
-            <TableCell>
-              <Button onClick={() => onEdit(user)} color="primary">Edit</Button>
+        {loading ? (
+          <TableRow>
+            <TableCell colSpan={5} align="center">
+              <Box display="flex" justifyContent="center" my={2}>
+                <CircularProgress />
+              </Box>
             </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          users.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.id}</TableCell>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.age}</TableCell>
+              <TableCell>
+                <Button onClick={() => onEdit(user)} color="primary">Edit</Button>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   </TableContainer>
