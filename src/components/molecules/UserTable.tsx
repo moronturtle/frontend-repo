@@ -1,10 +1,11 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Box } from "@mui/material";
 import TableHeadCell from "@/components/atoms/TableHeadCell";
 import Button from "@/components/atoms/Button";
+import { UserInterface } from "@/types/user";
 
 interface UserTableProps {
   loading: boolean;
-  users: { id: string; name: string; email: string; age: string }[];
+  users: UserInterface[] | null;
   onEdit: (user: any) => void;
 }
 
@@ -30,7 +31,7 @@ const UserTable = ({ loading, users, onEdit }: UserTableProps) => (
             </TableCell>
           </TableRow>
         ) : (
-          users.map((user) => (
+          users && users?.map((user) => (
             <TableRow key={user.id}>
               <TableCell>{user.id}</TableCell>
               <TableCell>{user.name}</TableCell>

@@ -1,59 +1,76 @@
 'use client';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import UserTable from '../molecules/UserTable';
-import Button from '../atoms/Button';
-import EditUserModal from '../molecules/EditUserModal';
-import Notification from '../atoms/Notification';
-
-const DUMMY_USER = [
-  { id: '2', name: 'gain', email: 'gain@gmail.com', age: '55' },
-  { id: '1', name: 'test', email: 'test@gmail.com', age: '45' },
-];
+import UserTable from '@/components/molecules/UserTable';
+import Button from '@/components/atoms/Button';
+import EditUserModal from '@/components/molecules/EditUserModal';
+import Notification from '@/components/atoms/Notification';
+import { AppDispatch, RootState } from '@/store/store';
+import { setError, setLoading, setUserInfo, updateUserInfo } from '@/store/slices/userSlice';
+import { fetchUserData, updateUserData } from '@/apis/userApi';
+import { UserInterface } from '@/types/user';
 
 const UserList = () => {
-  const [users, setUsers] = useState([]);
+  const dispatch: AppDispatch = useDispatch();
+  const { userInfo, loading } = useSelector((state: RootState) => state.user);
+
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [notification, setNotification] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+    severity: 'success' as 'success' | 'error',
+  });
 
-  //   const handleLoadUsers = () => {
-  //     dispatch(addUsers([{ id: "2", name: "gain", email: "gain@gmail.com", age: "55" },
-  //                         { id: "1", name: "test", email: "test@gmail.com", age: "45" }]));
-  //   };
-
-//   const handleLoadUsers = () => {
-//     setUsers(DUMMY_USER as any);
-//   };
-
-  const handleLoadUsers = () => {
-    setLoading(true);
-
-    setTimeout(() => {
-      setUsers(DUMMY_USER as any);
-      setLoading(false);
-    }, 2000);
+  const handleLoadUsers = async () => {
+    dispatch(setLoading(true));
+    try {
+      const data = await fetchUserData();
+      dispatch(setUserInfo(data));
+    } catch (err: any) {
+      dispatch(setError(err.message));
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
-
-  const handleEdit = (user: any) => {
-    setSelectedUser(user);
+  const handleEdit = (user: UserInterface) => {
+    setSelectedUser({ ...user });
     setOpenModal(true);
   };
 
-  const handleSave = (user: any) => {
-    // dispatch(updateUser(user));
-    setOpenModal(false);
-    setNotification(true);
+  const handleSave = async (user: Partial<UserInterface>) => {
+    dispatch(setLoading(true));
+    try {
+      const data = await updateUserData(user);
+      if (data) {
+        dispatch(updateUserInfo(user));
+        setOpenModal(false);
+        setNotification({
+          open: true,
+          message: 'User updated successfully!',
+          severity: 'success',
+        });
+      }
+    } catch (err: any) {
+      dispatch(setError(err.message));
+      setNotification({
+        open: true,
+        message: err.message || 'Failed to update user',
+        severity: 'error',
+      });
+    } finally {
+      dispatch(setLoading(false));
+      setOpenModal(false);
+    }
   };
 
   return (
     <div style={{ textAlign: 'center', padding: '20px' }}>
-      <div style={{ display: 'flex',marginBottom: '20px', width:'200px' }}>
-        <Button  onClick={handleLoadUsers}>Fetch User Info</Button>
+      <div style={{ display: 'flex', marginBottom: '20px', width: '200px' }}>
+        <Button onClick={handleLoadUsers}>Fetch User Info</Button>
       </div>
-      <UserTable loading={loading} users={users} onEdit={handleEdit} />
+      <UserTable loading={loading} users={userInfo} onEdit={handleEdit} />
       <EditUserModal
         open={openModal}
         user={selectedUser}
@@ -61,9 +78,10 @@ const UserList = () => {
         onSave={handleSave}
       />
       <Notification
-        message="User updated successfully!"
-        open={notification}
-        onClose={() => setNotification(false)}
+        message={notification?.message}
+        open={notification?.open}
+        severity={notification?.severity}
+        onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
       />
     </div>
   );

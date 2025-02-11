@@ -1,7 +1,8 @@
+import { UserInterface } from '@/types/user';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
-  userInfo: any | null;
+  userInfo: UserInterface[] | null;
   loading: boolean;
   error: string | null;
 }
@@ -16,8 +17,15 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserInfo: (state, action: PayloadAction<any>) => {
+    setUserInfo: (state, action: PayloadAction<UserInterface[] | null>) => {
       state.userInfo = action.payload;
+    },
+    updateUserInfo: (state, action: PayloadAction<Partial<UserInterface>>) => {
+      if (state?.userInfo) {
+        state.userInfo = state.userInfo.map((user) =>
+          user.docId === action.payload.docId ? { ...user, ...action.payload } : user,
+        );
+      }
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -28,5 +36,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUserInfo, setLoading, setError } = userSlice.actions;
+export const { setUserInfo, updateUserInfo, setLoading, setError } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,4 +1,5 @@
 import apiClient from '@/apis/apiClients';
+import { UserInterface } from '@/types/user';
 
 export async function fetchUserData() {
   try {
@@ -10,9 +11,9 @@ export async function fetchUserData() {
   }
 }
 
-export async function updateUserData(data: object) {
+export async function updateUserData(data: Partial<UserInterface>) {
   try {
-    const response = await apiClient.post('/users/update-user-data', data);
+    const response = await apiClient.put('/users/update-user-data', data);
     return response.data;
   } catch (error) {
     console.error('Error updating user data:', error);

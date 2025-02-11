@@ -1,22 +1,17 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 import Button from "../atoms/Button";
 import { useState, useEffect } from "react";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import { UserInterface } from "@/types/user";
 
 interface EditUserModalProps {
   open: boolean;
-  user: User | null;
+  user: UserInterface | null;
   onClose: () => void;
-  onSave: (user: User) => void;
+  onSave: (user: UserInterface) => void;
 }
 
 const EditUserModal = ({ open, user, onClose, onSave }: EditUserModalProps) => {
-  const [formData, setFormData] = useState<User>({
+  const [formData, setFormData] = useState<UserInterface>({
     id: "",
     name: "",
     email: "",
@@ -24,7 +19,7 @@ const EditUserModal = ({ open, user, onClose, onSave }: EditUserModalProps) => {
 
   useEffect(() => {
     if (user) {
-      setFormData(user); // Ensuring user is fully populated before setting state
+      setFormData(user);
     }
   }, [user]);
 

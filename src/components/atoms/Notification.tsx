@@ -1,19 +1,20 @@
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert } from "@mui/material";
 
 interface NotificationProps {
   message: string;
   open: boolean;
+  severity: "success" | "error";
   onClose: () => void;
 }
 
-const Notification = ({ message, open, onClose }: NotificationProps) => (
+const Notification = ({ message, open, severity, onClose }: NotificationProps) => (
   <Snackbar
     open={open}
     autoHideDuration={4000}
     onClose={onClose}
-    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
   >
-    <Alert onClose={onClose} severity="success">
+    <Alert onClose={onClose} severity={severity}>
       {message}
     </Alert>
   </Snackbar>
