@@ -12,6 +12,7 @@ interface EditUserModalProps {
 
 const EditUserModal = ({ open, user, onClose, onSave }: EditUserModalProps) => {
   const [formData, setFormData] = useState<UserInterface>({
+    docId:"",
     id: "",
     name: "",
     email: "",
