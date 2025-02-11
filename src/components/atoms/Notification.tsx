@@ -10,7 +10,7 @@ interface NotificationProps {
 const Notification = ({ message, open, severity, onClose }: NotificationProps) => (
   <Snackbar
     open={open}
-    autoHideDuration={4000}
+    autoHideDuration={2000}
     onClose={onClose}
     anchorOrigin={{ vertical: "top", horizontal: "center" }}
   >

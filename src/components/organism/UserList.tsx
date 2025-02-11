@@ -9,8 +9,10 @@ import { AppDispatch, RootState } from '@/store/store';
 import { setError, setLoading, setUserInfo, updateUserInfo } from '@/store/slices/userSlice';
 import { fetchUserData, updateUserData } from '@/apis/userApi';
 import { UserInterface } from '@/types/user';
+import { useAuth } from '@/context/AuthContext';
 
 const UserList = () => {
+  const { logout } = useAuth();
   const dispatch: AppDispatch = useDispatch();
   const { userInfo, loading } = useSelector((state: RootState) => state.user);
 
@@ -67,9 +69,22 @@ const UserList = () => {
 
   return (
     <div style={{ textAlign: 'center', padding: '20px' }}>
-      <div style={{ display: 'flex', marginBottom: '20px', width: '200px' }}>
-        <Button onClick={handleLoadUsers}>Fetch User Info</Button>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: '20px',
+          width: '100%',
+        }}
+      >
+        <Button style={{ width: '180px' }} size="medium" onClick={handleLoadUsers}>
+          Fetch User Info
+        </Button>
+        <Button style={{ width: '150px' }} size="medium" onClick={logout} color="error">
+          Logout
+        </Button>
       </div>
+
       <UserTable loading={loading} users={userInfo} onEdit={handleEdit} />
       <EditUserModal
         open={openModal}

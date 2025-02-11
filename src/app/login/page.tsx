@@ -1,17 +1,18 @@
-'use client'
-import { useRouter } from 'next/navigation';
+'use client';
 import { Container } from '@mui/material';
 import { loginWithGoogle } from '@/apis/authApi';
 import LoginForm from '@/components/organism/ LoginForm';
+import { useAuth } from '@/context/AuthContext';
+import PublicRoute from '@/app/providers/PublicRoute';
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { login } = useAuth();
 
   const handleGoogleLogin = async () => {
     try {
       const token = await loginWithGoogle();
       if (token) {
-        router.push('/main');
+        login(token);
       }
     } catch (error) {
       console.error(error);
@@ -19,8 +20,10 @@ export default function LoginPage() {
   };
 
   return (
-    <Container>
-      <LoginForm onClick={handleGoogleLogin} />
-    </Container>
+    <PublicRoute>
+      <Container>
+        <LoginForm onClick={handleGoogleLogin} />
+      </Container>
+    </PublicRoute>
   );
 }
